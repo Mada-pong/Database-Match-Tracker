@@ -1,0 +1,24 @@
+name: Notify Discord on push
+
+on:
+  push:
+    branches: ["main"]
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Discord
+        run: |
+          set -e
+          msg=$(jq -r '.head_commit.message' "$GITHUB_EVENT_PATH")
+
+          payload=$(jq -n \
+            --arg repo "$GITHUB_REPOSITORY" \
+            --arg actor "${{ github.actor }}" \
+            --arg branch "$GITHUB_REF_NAME" \
+            --arg msg "$msg" \
+            '{content: "📦 \($repo)\n👤 \($actor)\n🌿 \($branch)\n💬 \($msg)"}')
+
+          curl -H "Content-Type: application/json" \
+              -d "$payload" \
+              "${{ secrets.DISCORD_WEBHOOK }}"
