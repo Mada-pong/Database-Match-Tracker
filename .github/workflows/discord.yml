@@ -17,12 +17,7 @@ jobs:
             --arg actor "${{ github.actor }}" \
             --arg branch "$GITHUB_REF_NAME" \
             --arg msg "$msg" \
-            '{content: 
-            "**Repository:** \
-            ($repo)\n**Author:** \
-            ($actor)\n**Branch:** \
-            ($branch)\n**Message:** \
-            ($msg)\n\n"}')
+            '{content: "**Repository:** \($repo)\n**Author:** \($actor)\n**Branch:** \($branch)\n**Message:** \($msg)"}')
 
           curl -H "Content-Type: application/json" \
               -d "$payload" \
