@@ -10,14 +10,14 @@ jobs:
       - name: Send message to Discord
         run: |
           set -e
-          msg=$(jq -r '.head_commit.message' "$GITHUB_EVENT_PATH")
+          commits=$(jq -r '.commits[].message' "$GITHUB_EVENT_PATH" | sed 's/^/- /')
 
           payload=$(jq -n \
             --arg repo "$GITHUB_REPOSITORY" \
             --arg actor "${{ github.actor }}" \
             --arg branch "$GITHUB_REF_NAME" \
-            --arg msg "$msg" \
-            '{content: "**Repository:** \($repo)\n**Author:** \($actor)\n**Branch:** \($branch)\n**Message:** \($msg)"}')
+            --arg msg "$commits" \
+            '{content: "**Repository:** \($repo)\n**Author:** \($actor)\n**Branch:** \($branch)\n\n**Recent commits:**\n\($msg)"}')
 
           curl -H "Content-Type: application/json" \
               -d "$payload" \
