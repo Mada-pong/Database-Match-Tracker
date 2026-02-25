@@ -10,7 +10,7 @@ def menuPrompt():
         "Hello, welcome to the player data tracker. Please choose one of the following:\n"
         "1. List all players\n"
         "2. Add player\n"
-        "3. Look at specific player\n"
+        "3. Look at specific player (by username)\n"
         "4. Delete specific player\n"
         "5. Test connection\n"
         "6. Quit"
@@ -47,7 +47,15 @@ def main():
                         f"username {addedPlayer['username']}, email {addedPlayer['email']}, dob {addedPlayer['dob']}"
                     )
             case "3":
-                QM
+                username = input("Choose player username ").strip()
+                row = QM.showSpecificPlayer(conn, username)
+                
+                print(
+                    f"Username: {row['username']}\n"
+                    f"kills: {row['kills']}\n"
+                    f"deaths: {row['deaths']}\n"
+                    f"assists: {row['assists']}\n"
+                )
             case "4":
                 QM.deletePlayer(conn)
             case "5":

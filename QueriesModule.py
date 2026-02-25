@@ -115,3 +115,23 @@ def showAllPlayers(conn: MySQLConnection):
         cur.close()
 
     return
+
+def showSpecificPlayer(conn: MySQLConnection, username: str):
+    selectSQL = """
+    select username, total_games_played, kills, deaths, assists from player_profile 
+    left join overall_stats
+    on player_profile.playerID = overall_stats.statsID
+    where player_profile.username = %s;
+    """
+    
+    cur = conn.cursor(dictionary=True)
+    try: 
+        cur.execute(selectSQL, (username,))
+        row = cur.fetchone()
+        return row 
+    except MySQLError as error: 
+        print(f"MYSQL ERROR: \n {error}")
+    finally:
+        cur.close()
+        
+    return
