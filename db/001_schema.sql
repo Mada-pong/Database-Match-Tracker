@@ -16,7 +16,7 @@ create table overall_stats (
     foreign key (statsID) references player_profile(playerID)
 );
 
-create table match_profile (
+create table match_data (
 	matchID int primary key auto_increment, 
     start_datetime datetime not null, 
     end_datetime datetime not null
@@ -34,5 +34,4 @@ create table match_player (
     foreign key (matchID) references match_profile(matchID),
     foreign key (playerID) references player_profile(playerID)
 );
-
 
