@@ -1,7 +1,6 @@
 from mysql.connector.connection import MySQLConnection
 from mysql.connector import Error as MySQLError
 
-
 def deletePlayer(conn: MySQLConnection) -> None:
     player_id = int(input("Choose id of player to delete ").strip())
 
@@ -135,3 +134,22 @@ def showSpecificPlayer(conn: MySQLConnection, username: str):
         cur.close()
         
     return
+
+def getIDByUsername(conn: MySQLConnection, username: str):
+    selectSQL = """
+    select playerID from player_profile
+    where username = %s;
+    """
+    
+    cur = conn.cursor()
+    
+    try: 
+        cur.execute(selectSQL, (username,))
+        row = cur.fetchone()
+        return row[0]
+    except MySQLError as error:
+        print(f"MYSQL ERROR: \n {error}")
+    finally:
+        cur.close()
+        
+    return -1
