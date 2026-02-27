@@ -26,9 +26,23 @@ def addMatch(conn: MySQLConnection, start_datetime: str, end_datetime: str, winn
         
     return matchID
 
-def addPlayerToMatch(conn: MySQLConnection):
-    pass
+def addPlayerToMatch(conn: MySQLConnection, matchID: int, playerID: int, side: Side, kills: int, deaths: int, assists: int):
+    cur = conn.cursor()
+    
+    insertSQL = """
+    insert into match_player 
+    values (%s, %s, %s, %s, %s, %s)
+    """
+    args = (matchID, playerID, side, kills, deaths, assists)
+    
+    try: 
+        cur.execute(insertSQL, args)
+        conn.commit()
+    except MySQLError as error:
+        print(f"Error during insert: {error}")
+        conn.rollback()
+    finally:
+        cur.close()
 
-# Debug
+#Debug
 # connection = startConnection()
-# print(addMatch(connection, "2025-12-02 05:10:10", "2025-12-02 05:42:10", Side.BLUE))
