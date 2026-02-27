@@ -1,18 +1,18 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
-
+from src.models.match_entry import MatchEntry
 
 router = APIRouter(prefix="/matches", tags=["matches"])
 
-class UserInput(BaseModel):
-    text: str 
-
-@router.post("/")
+@router.get("/")
 def create_match():
     return {"status": "ok"}
 
-@router.post("/submit")
-def submit_text(data: UserInput):
+@router.post("/SubmitMatch")
+def submit_text(data: MatchEntry):
+
     print(type(data))
-    print(data.text)
-    return {"you_sent": data.text}
+    print(data.start_datetime)
+    print(data.end_datetime)
+    print(data.winning_side)
+    
+    return {"Status": "ok"}
