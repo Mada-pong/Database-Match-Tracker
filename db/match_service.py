@@ -2,8 +2,6 @@ from mysql.connector.connection import MySQLConnection
 from mysql.connector import Error as MySQLError
 from enum import Enum
 
-from connection_service import startConnection
-
 class Side(Enum):
     RED = 1 
     BLUE = 2
@@ -43,6 +41,3 @@ def addPlayerToMatch(conn: MySQLConnection, matchID: int, playerID: int, side: S
         conn.rollback()
     finally:
         cur.close()
-
-#Debug
-# connection = startConnection()
