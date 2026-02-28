@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from src.models.match_entry import MatchEntry
-from db.match_service import getMatchByID, addMatch, addPlayerToMatch
+from db.match_service import getMatchByID, addMatch, addPlayerToMatch, Side
 from db.connection_service import get_connection
 from mysql.connector import MySQLConnection
 
@@ -15,16 +15,9 @@ def get_match(matchID: int, conn: MySQLConnection = Depends(get_connection)):
 
 @router.post("/SubmitMatch")
 def create_match(data: MatchEntry, conn: MySQLConnection = Depends(get_connection)):
-
-    print(type(data))
-    print(data.start_datetime)
-    print(data.end_datetime)
-    print(data.winning_side)
+    new_matchID = addMatch(conn, data.start_datetime, data.end_datetime, data.winning_side)
     
     for player in data.player_list:
-        print(player)
-        
-    print(get_connection())
-    
+        addPlayerToMatch(conn, new_matchID, player.player_id, player.side, player.kills, player.deaths, player.assists)
         
     return {"Status": "ok"}

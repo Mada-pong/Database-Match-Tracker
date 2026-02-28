@@ -2,7 +2,6 @@ import os
 import dotenv
 import mysql.connector as connection
 from mysql.connector import MySQLConnection
-from fastapi import Depends
 
 def startConnection() -> MySQLConnection:
     dotenv.load_dotenv()
