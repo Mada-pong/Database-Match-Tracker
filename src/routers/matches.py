@@ -8,9 +8,10 @@ router = APIRouter(prefix="/matches", tags=["matches"])
 
 @router.get("/")
 def get_match(matchID: int, conn: MySQLConnection = Depends(get_connection)):
-    getMatchByID(conn, matchID)
+    match_data = getMatchByID(conn, matchID)
     
-    return {"status": "ok"}
+    return {"status": "ok",
+            "data": match_data}
 
 @router.post("/SubmitMatch")
 def create_match(data: MatchEntry, conn: MySQLConnection = Depends(get_connection)):

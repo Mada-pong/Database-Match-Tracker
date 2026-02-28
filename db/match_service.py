@@ -7,7 +7,7 @@ class Side(Enum):
     BLUE = 2
 
 def getMatchByID(conn: MySQLConnection, matchID: int):
-    cur = conn.cursor()
+    cur = conn.cursor(dictionary=True)
     
     selectSQL = """
     select * from match_data
@@ -21,6 +21,8 @@ def getMatchByID(conn: MySQLConnection, matchID: int):
         row = cur.fetchone()
         
         print(row)
+        
+        return row
     except MySQLError as error: 
         print(f"MYSQL ERROR: \n {error}")
     finally:
