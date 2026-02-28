@@ -6,6 +6,26 @@ class Side(Enum):
     RED = 1 
     BLUE = 2
 
+def getMatchByID(conn: MySQLConnection, matchID: int):
+    cur = conn.cursor()
+    
+    selectSQL = """
+    select * from match_data
+    where matchID = %s;
+    """
+    
+    args = (matchID,)
+    
+    try:
+        cur.execute(selectSQL, args)
+        row = cur.fetchone()
+        
+        print(row)
+    except MySQLError as error: 
+        print(f"MYSQL ERROR: \n {error}")
+    finally:
+        cur.close()
+
 ### Add a match and returns the match ID for later use. 
 def addMatch(conn: MySQLConnection, start_datetime: str, end_datetime: str, winning_side: Side):
     cur = conn.cursor()
@@ -41,3 +61,4 @@ def addPlayerToMatch(conn: MySQLConnection, matchID: int, playerID: int, side: S
         conn.rollback()
     finally:
         cur.close()
+
