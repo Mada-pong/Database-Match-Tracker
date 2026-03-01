@@ -12,4 +12,3 @@ class PlayerEntry(BaseModel):
     kills: int
     deaths: int
     assists: int
-

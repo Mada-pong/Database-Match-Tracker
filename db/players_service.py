@@ -78,9 +78,9 @@ def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
         conn.commit()
 
         if cur.rowcount == 0:
-            print("Player was not deleted (no longer exist)")
+            print(f"User ({player_id}) does not exist or is already marked as inactive")
         else:
-            print("Player deletion successful")
+            print(f"User ({player_id}) has been deleted successfully")
             
         cur.execute(selectSQL, args)
         player_data_row = cur.fetchone()
@@ -93,6 +93,30 @@ def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
     finally:
         cur.close()
 
+def restore_player(player_id: int, conn: MySQLConnection):
+    updateSQL = """
+    UPDATE player_profile p
+    SET isActive = 1
+    WHERE playerID = %s
+    """
+    
+    cur = conn.cursor(dictionary=True)
+    args = (player_id,)
+    
+    try:
+        cur.execute(updateSQL, args)
+        conn.commit()
+
+        if cur.rowcount == 0:
+            return f"User ID ({player_id}) was not found."
+        else:
+            return f"User ID ({player_id}) restored successful."
+    except MySQLError as error:
+        conn.rollback()
+        print(f"Error during insert {error}")
+        raise
+    finally:
+        cur.close()
         
 def addPlayer(username: str, email: str, dob: date, conn: MySQLConnection):
 
