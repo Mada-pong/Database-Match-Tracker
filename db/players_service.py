@@ -64,31 +64,35 @@ def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
     SET isActive = 0
     WHERE playerID = %s
     """
+    
+    selectSQL = """
+    select * from player_profile
+    where playerID = %s
+    """
 
+    args = (player_id,)
     cur = conn.cursor(dictionary=True)
+
     try:
-        cur.execute(updateSQL, (player_id,))
+        cur.execute(updateSQL, args)
         conn.commit()
-        row = cur.fetchone()
-        player_data = row
-        if row is None:
-            print("No matching player found")
-            return
 
         if cur.rowcount == 0:
-            print("Player was not deleted (no longer existed)")
+            print("Player was not deleted (no longer exist)")
         else:
             print("Player deletion successful")
-        return player_data
-    
-    
+            
+        cur.execute(selectSQL, args)
+        player_data_row = cur.fetchone()
+            
+        return player_data_row
     except MySQLError as error:
         conn.rollback()
         print(f"Error during insert {error}")
         raise
     finally:
         cur.close()
-        
+
         
 def addPlayer(username: str, email: str, dob: date, conn: MySQLConnection):
 
