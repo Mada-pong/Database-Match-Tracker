@@ -4,7 +4,7 @@ create table player_profile (
 	playerID int primary key auto_increment,
     username varchar(50) not null,
     email varchar(200) not null,
-    dob date not null
+    dob date not null    
 );
 
 create table overall_stats (
