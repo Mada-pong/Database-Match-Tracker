@@ -35,7 +35,6 @@ def changeActiveStatusesOfAll(conn: MySQLConnection):
         
     return
 
-
 def showSpecificPlayer(conn: MySQLConnection, username: str):
     selectSQL = """
     select playerID, username, total_games_played, kills, deaths, assists from player_profile 
@@ -55,8 +54,6 @@ def showSpecificPlayer(conn: MySQLConnection, username: str):
         cur.close()
         
     return
-
-
 
 def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
     updateSQL = """
@@ -93,7 +90,7 @@ def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
     finally:
         cur.close()
 
-def restore_player(player_id: int, conn: MySQLConnection):
+def restorePlayer(player_id: int, conn: MySQLConnection):
     updateSQL = """
     UPDATE player_profile p
     SET isActive = 1
@@ -110,7 +107,7 @@ def restore_player(player_id: int, conn: MySQLConnection):
         if cur.rowcount == 0:
             return f"User ID ({player_id}) was not found."
         else:
-            return f"User ID ({player_id}) restored successful."
+            return f"User ID ({player_id}) restored successfully."
     except MySQLError as error:
         conn.rollback()
         print(f"Error during insert {error}")
