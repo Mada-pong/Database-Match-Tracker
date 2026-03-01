@@ -35,7 +35,7 @@ def changeActiveStatusesOfAll(conn: MySQLConnection):
         
     return
 
-def showSpecificPlayer(conn: MySQLConnection, username: str):
+def showSpecificPlayer(username: str, conn: MySQLConnection,):
     selectSQL = """
     select playerID, username, total_games_played, kills, deaths, assists from player_profile 
     left join overall_stats
@@ -54,6 +54,28 @@ def showSpecificPlayer(conn: MySQLConnection, username: str):
         cur.close()
         
     return
+
+def getUserStatus(player_id: int, conn: MySQLConnection):
+    selectSQL = """
+    select * from player_profile
+    where playerID = %s
+    """
+    
+    args = (player_id, )
+    cur = conn.cursor(dictionary=True)
+    
+    try: 
+        cur.execute(selectSQL, args)
+        row = cur.fetchone()
+    
+        player_data = {"playerID": player_id,
+                       "isActive": row["isActive"]}
+    
+        return player_data
+    except MySQLError as error:
+        print(f"Error during insert {error}")
+    finally:
+        cur.close()
 
 def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
     updateSQL = """
