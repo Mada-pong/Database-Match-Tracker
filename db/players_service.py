@@ -152,7 +152,7 @@ def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
     except MySQLError as error:
         conn.rollback()
         print(f"Error during insert {error}")
-        raise
+        raise 
     finally:
         cur.close()
 
@@ -195,8 +195,8 @@ def addPlayer(username: str, email: str, dob: date, conn: MySQLConnection):
         return 0
 
     insertSQL = """
-    INSERT INTO player_profile (username, email, dob)
-    VALUES (%s, %s, %s)
+    INSERT INTO player_profile (username, email, dob, isActive)
+    VALUES (%s, %s, %s, %s)
     """
 
     selectSQL = """
@@ -207,7 +207,7 @@ def addPlayer(username: str, email: str, dob: date, conn: MySQLConnection):
 
     cur = conn.cursor(dictionary=True)
     try:
-        cur.execute(insertSQL, (username, email, dob))
+        cur.execute(insertSQL, (username, email, dob, 1))
         createdID = cur.lastrowid
         conn.commit()
 
