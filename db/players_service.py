@@ -66,16 +66,60 @@ def getUserStatus(player_id: int, conn: MySQLConnection):
     
     try: 
         cur.execute(selectSQL, args)
+        
         row = cur.fetchone()
-    
-        player_data = {"playerID": player_id,
-                       "isActive": row["isActive"]}
-    
+
+        if row is None:
+            return -1
+
+        player_data = {
+            "playerID": player_id,
+            "isActive": row["isActive"]
+        }
+
         return player_data
     except MySQLError as error:
         print(f"Error during insert {error}")
     finally:
         cur.close()
+        
+        
+def deletePlayerHard(player_id: int, conn:MySQLConnection) -> None:
+    selectSQL = """
+    SELECT * FROM player_profile
+    WHERE playerID = %s
+    """
+    
+    
+    deleteSQL = """
+    DELETE FROM player_profile
+    WHERE playerID = %s
+    """
+    args = (player_id, )
+    cur = conn.cursor(dictionary=True)
+    try:
+        cur.execute(selectSQL, args)
+        if cur.rowcount == 0:
+            print(f"User ({player_id}) does not exist or is already marked as inactive")
+        else:
+            print(f"User ({player_id}) will be deleted")
+            
+        player_data = cur.fetchone()
+        cur.execute(deleteSQL, args)
+        conn.commit()
+        return player_data
+    
+    except MySQLError as error:
+        conn.rollback()
+        print(f"Error during insert {error}")
+        raise
+    finally:
+        cur.close()
+    
+    
+    
+        
+
 
 def deletePlayerSoft(player_id: int, conn: MySQLConnection) -> None:
     updateSQL = """

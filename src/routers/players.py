@@ -1,11 +1,19 @@
 from fastapi import APIRouter, Depends
 from src.models import AddPlayer, GetPlayer
-from db.players_service import showSpecificPlayer, deletePlayerSoft, addPlayer, showAllPlayers, changeActiveStatusesOfAll, restorePlayer, getUserStatus
+from db.players_service import showSpecificPlayer, deletePlayerSoft, addPlayer, showAllPlayers, changeActiveStatusesOfAll, restorePlayer, getUserStatus, deletePlayerHard
 from db.connection_service import get_connection
 from mysql.connector import MySQLConnection
 
 
 router = APIRouter(prefix="/players", tags=["players"])
+
+
+
+@router.post("/DeletePlayerHard")
+def delete_player_hard(player_id: int, conn: MySQLConnection = Depends(get_connection)):
+    player_data = deletePlayerHard(player_id,conn)
+    return { "status": "ok",
+            "data": player_data}
 
 
 @router.post("/ChangeAllStatusesOfActive")
@@ -55,3 +63,7 @@ def get_all_players(conn: MySQLConnection = Depends(get_connection)):
     player_data = showAllPlayers(conn)
     return { "status": "ok",
             "data": player_data}
+    
+    
+    
+    
